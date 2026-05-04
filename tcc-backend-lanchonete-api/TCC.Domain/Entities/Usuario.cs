@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TCC.Domain.Entities
 {
-    public  class Usuario
+    public  class Usuario : Entity
     {
         public string email { get; set; }
         public string senha { get; set; }
