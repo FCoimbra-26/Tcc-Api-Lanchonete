@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCC.Application", "TCC.Appl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCC.Infra.IOC", "TCC.Infra.IOC\TCC.Infra.IOC.csproj", "{5C36B8A5-8F5F-44EA-98C0-D1CBE87AFD5A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCC.Infra.Data", "TCC.Infra.Data\TCC.Infra.Data.csproj", "{FF862B2C-CB3F-4495-B250-55132EC24D9F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{5C36B8A5-8F5F-44EA-98C0-D1CBE87AFD5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C36B8A5-8F5F-44EA-98C0-D1CBE87AFD5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C36B8A5-8F5F-44EA-98C0-D1CBE87AFD5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF862B2C-CB3F-4495-B250-55132EC24D9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF862B2C-CB3F-4495-B250-55132EC24D9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF862B2C-CB3F-4495-B250-55132EC24D9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF862B2C-CB3F-4495-B250-55132EC24D9F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
