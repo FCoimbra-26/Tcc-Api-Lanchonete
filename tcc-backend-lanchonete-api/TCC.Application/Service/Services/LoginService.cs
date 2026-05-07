@@ -11,11 +11,16 @@ namespace TCC.Application.Service.Services
     {
         private readonly ITokenService _tokenService;
         private readonly IUsuarioRepository _usuarioRepository;
+        private readonly IUsuarioRoleRepository _usuarioRoleRepository;
 
-        public LoginService(ITokenService tokenService, IUsuarioRepository usuarioRepository)
+        public LoginService(
+            ITokenService tokenService, 
+            IUsuarioRepository usuarioRepository,
+            IUsuarioRoleRepository usuarioRoleRepository)
         {
             _tokenService = tokenService;
             _usuarioRepository = usuarioRepository;
+            _usuarioRoleRepository = usuarioRoleRepository;
         }
 
         public async Task<LoginUserResponse> logar(LoginUserRequest userLogin)
@@ -49,13 +54,16 @@ namespace TCC.Application.Service.Services
                 };
             }
 
+            var roles = await _usuarioRoleRepository.GetActiveRolesByUsuarioIdAsync(usuario.Id);
+            var primaryRole = roles.FirstOrDefault();
+
             var token = _tokenService.GenerateToken(usuario);
 
             return new LoginUserResponse
             {
                 Success = true,
                 Id = usuario.Id,
-                Tipo = usuario.Role,
+                Tipo = primaryRole,
                 Token = token
             };
         }

@@ -20,10 +20,12 @@ namespace TCC.Infra.IOC
                     b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
 
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            services.AddScoped<IUsuarioRoleRepository, UsuarioRoleRepository>();
 
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<IRegisterService, RegisterService>();
+            services.AddScoped<IRoleService, RoleService>();
 
             return services;
         }

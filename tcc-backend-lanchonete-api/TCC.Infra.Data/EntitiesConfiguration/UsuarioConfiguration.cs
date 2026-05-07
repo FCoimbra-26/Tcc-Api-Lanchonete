@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TCC.Domain.Entities;
 
@@ -23,9 +24,6 @@ namespace TCC.Infra.Data.EntitiesConfiguration
             builder.Property(e => e.SenhaHash)
                 .IsRequired();
 
-            builder.Property(e => e.Role)
-                .IsRequired();
-
             builder.Property(e => e.Ativo)
                 .IsRequired()
                 .HasDefaultValue(true);
@@ -43,6 +41,11 @@ namespace TCC.Infra.Data.EntitiesConfiguration
             builder.HasOne(e => e.Pessoa)
                 .WithMany()
                 .HasForeignKey(e => e.PessoaId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(e => e.Roles)
+                .WithOne(r => r.Usuario)
+                .HasForeignKey(r => r.UsuarioId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

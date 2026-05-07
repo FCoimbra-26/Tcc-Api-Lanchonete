@@ -11,11 +11,16 @@ namespace TCC.Application.Service.Services
     public class RegisterService : IRegisterService
     {
         private readonly IUsuarioRepository _usuarioRepository;
+        private readonly IUsuarioRoleRepository _usuarioRoleRepository;
         private readonly ITokenService _tokenService;
 
-        public RegisterService(IUsuarioRepository usuarioRepository, ITokenService tokenService)
+        public RegisterService(
+            IUsuarioRepository usuarioRepository, 
+            IUsuarioRoleRepository usuarioRoleRepository,
+            ITokenService tokenService)
         {
             _usuarioRepository = usuarioRepository;
+            _usuarioRoleRepository = usuarioRoleRepository;
             _tokenService = tokenService;
         }
 
@@ -72,12 +77,13 @@ namespace TCC.Application.Service.Services
                     Email = request.Email,
                     EmailNormalizado = request.Email.ToUpper(),
                     SenhaHash = senhaHash,
-                    Role = UsuarioRole.CLIENTE,
                     Pessoa = pessoa,
                     Ativo = true
                 };
 
                 var usuarioCriado = await _usuarioRepository.CreateAsync(usuario);
+
+                await _usuarioRoleRepository.AssignRoleAsync(usuarioCriado.Id, UsuarioRole.CLIENTE);
 
                 var token = _tokenService.GenerateToken(usuarioCriado);
 
@@ -87,7 +93,7 @@ namespace TCC.Application.Service.Services
                     Id = usuarioCriado.Id,
                     Nome = $"{usuarioCriado.Pessoa.Nome} {usuarioCriado.Pessoa.Sobrenome}",
                     Email = usuarioCriado.Email,
-                    Role = usuarioCriado.Role,
+                    Role = UsuarioRole.CLIENTE,
                     Token = token
                 };
             }
