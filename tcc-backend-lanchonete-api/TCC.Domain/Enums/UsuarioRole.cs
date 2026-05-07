@@ -1,4 +1,4 @@
-﻿namespace TCC.Domain.Entities
+﻿namespace TCC.Domain.Enums
 {
     public enum UsuarioRole
     {

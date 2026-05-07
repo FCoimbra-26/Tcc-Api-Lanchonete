@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TCC.Application._Commom;
-using TCC.Domain.Entities;
+using TCC.Domain.Enums;
 
 namespace TCC.Application.Models.Responses.Usuario
 {

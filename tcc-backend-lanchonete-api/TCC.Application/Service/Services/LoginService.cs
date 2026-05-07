@@ -7,6 +7,7 @@ using TCC.Application.Models.Requests.Usuario;
 using TCC.Application.Models.Responses.Usuario;
 using TCC.Application.Service.Interfaces;
 using TCC.Domain.Entities;
+using TCC.Domain.Enums;
 using TCC.Infra.Security.Interfaces;
 
 namespace TCC.Application.Service.Services
