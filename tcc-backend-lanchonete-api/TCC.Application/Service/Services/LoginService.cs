@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TCC.Application.Models.Requests.Usuario;
 using TCC.Application.Models.Responses.Usuario;
 using TCC.Application.Service.Interfaces;
-using TCC.Domain.Entities;
-using TCC.Domain.Enums;
+using TCC.Domain.Interfaces;
 using TCC.Infra.Security.Interfaces;
 
 namespace TCC.Application.Service.Services
@@ -15,27 +10,54 @@ namespace TCC.Application.Service.Services
     public class LoginService : ILoginService
     {
         private readonly ITokenService _tokenService;
-        public LoginService(ITokenService tokenService)
+        private readonly IUsuarioRepository _usuarioRepository;
+
+        public LoginService(ITokenService tokenService, IUsuarioRepository usuarioRepository)
         {
             _tokenService = tokenService;
+            _usuarioRepository = usuarioRepository;
         }
-        public Task<LoginUserResponse> logar(LoginUserRequest userLogin)
+
+        public async Task<LoginUserResponse> logar(LoginUserRequest userLogin)
         {
-            Usuario usuario = new Usuario
+            var usuario = await _usuarioRepository.GetByEmailAsync(userLogin.Email);
+
+            if (usuario == null)
             {
-                email = userLogin.Email,
-                senha = userLogin.Senha,
-                role = UsuarioRole.ADMIN
+                return new LoginUserResponse
+                {
+                    Success = false,
+                    Error = "Email ou senha inválidos"
+                };
+            }
+
+            if (!usuario.Ativo)
+            {
+                return new LoginUserResponse
+                {
+                    Success = false,
+                    Error = "Usuário inativo"
+                };
+            }
+
+            if (!BCrypt.Net.BCrypt.Verify(userLogin.Senha, usuario.SenhaHash))
+            {
+                return new LoginUserResponse
+                {
+                    Success = false,
+                    Error = "Email ou senha inválidos"
+                };
+            }
+
+            var token = _tokenService.GenerateToken(usuario);
+
+            return new LoginUserResponse
+            {
+                Success = true,
+                Id = usuario.Id,
+                Tipo = usuario.Role,
+                Token = token
             };
-            this._tokenService.GenerateToken(usuario);
-
-            return Task.FromResult(new LoginUserResponse
-            {
-                Id = 1,
-                Tipo = UsuarioRole.ADMIN,
-                Token = this._tokenService.GenerateToken(usuario)
-
-            });
         }
     }
 }

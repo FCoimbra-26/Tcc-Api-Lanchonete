@@ -1,11 +1,8 @@
 ﻿using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
+using Microsoft.IdentityModel.Tokens;
 using TCC.Domain.Entities;
 using TCC.Infra.Security.Interfaces;
 using TCC.Infra.Security.Secrets;
@@ -21,9 +18,9 @@ namespace TCC.Infra.Security.Token
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[] {
-                    new Claim(ClaimTypes.Name, usuario.email),
-                    new Claim(ClaimTypes.Role, usuario.role.ToString()),
-                    new Claim("Id",usuario.Id.ToString())
+                    new Claim(ClaimTypes.Name, usuario.Email),
+                    new Claim(ClaimTypes.Role, usuario.Role.ToString()),
+                    new Claim("Id", usuario.Id.ToString())
                 }),
                 Expires = DateTime.UtcNow.AddDays(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

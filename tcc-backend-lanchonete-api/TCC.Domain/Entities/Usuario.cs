@@ -1,19 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TCC.Domain.Enums;
 
 namespace TCC.Domain.Entities
 {
-    public  class Usuario : Entity
+    public class Usuario : Entity
     {
-        public string email { get; set; }
-        public string senha { get; set; }
+        public string Email { get; set; }
+        public string EmailNormalizado { get; set; }
+        public string SenhaHash { get; set; }
+        public UsuarioRole Role { get; set; }
+        public bool Ativo { get; set; }
 
-        public UsuarioRole role { get; set; }
+        public int PessoaId { get; set; }
+        public virtual Pessoa Pessoa { get; set; }
 
-        public Usuario() { }
+        public Usuario() 
+        {
+            Ativo = true;
+        }
     }
 }
