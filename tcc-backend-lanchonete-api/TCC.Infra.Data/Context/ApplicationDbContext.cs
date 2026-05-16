@@ -12,6 +12,8 @@ namespace TCC.Infra.Data.Context
         public DbSet<Pessoa> Pessoas { get; set; }
         public DbSet<Endereco> Enderecos { get; set; }
         public DbSet<UsuarioRoleHistorico> UsuariosRoles { get; set; }
+        public DbSet<Unidade> Unidades { get; set; }
+        public DbSet<UnidadeCanal> UnidadesCanais { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -21,6 +23,8 @@ namespace TCC.Infra.Data.Context
             modelBuilder.ApplyConfiguration(new PessoaConfiguration());
             modelBuilder.ApplyConfiguration(new EnderecoConfiguration());
             modelBuilder.ApplyConfiguration(new UsuarioRoleHistoricoConfiguration());
+            modelBuilder.ApplyConfiguration(new UnidadeConfiguration());
+            modelBuilder.ApplyConfiguration(new UnidadeCanalConfiguration());
         }
     }
 }

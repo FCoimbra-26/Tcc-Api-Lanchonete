@@ -21,11 +21,13 @@ namespace TCC.Infra.IOC
 
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             services.AddScoped<IUsuarioRoleRepository, UsuarioRoleRepository>();
+            services.AddScoped<IUnidadeRepository, UnidadeRepository>();
 
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<IRegisterService, RegisterService>();
             services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IUnidadeService, UnidadeService>();
 
             return services;
         }
