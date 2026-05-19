@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using TCC.Application.Models.Requests.Role;
@@ -8,6 +9,7 @@ namespace tcc_backend_lanchonete_api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "ADMIN,GERENTE")] 
     public class UsuarioRoleController : ControllerBase
     {
         private readonly IRoleService _roleService;
@@ -46,6 +48,7 @@ namespace tcc_backend_lanchonete_api.Controllers
         }
 
         [HttpGet("user/{usuarioId}")]
+        [Authorize] 
         public async Task<ActionResult<dynamic>> GetUserRolesAsync(int usuarioId)
         {
             var response = await _roleService.GetUserRolesAsync(usuarioId);
