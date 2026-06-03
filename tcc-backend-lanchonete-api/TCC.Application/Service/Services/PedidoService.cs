@@ -1,0 +1,211 @@
+using TCC.Application.Models.Requests.Pedido;
+using TCC.Application.Models.Responses.Pedido;
+using TCC.Application.Service.Interfaces;
+using TCC.Domain.Entities;
+using TCC.Domain.Enums;
+using TCC.Domain.Interfaces;
+
+namespace TCC.Application.Service.Services
+{
+    public class PedidoService : IPedidoService
+    {
+        private readonly IUnidadeRepository _unidadeRepository;
+        private readonly ICardapioRepository _cardapioRepository;
+        private readonly IEstoqueRepository _estoqueRepository;
+        private readonly IPedidoRepository _pedidoRepository;
+
+        public PedidoService(
+            IUnidadeRepository unidadeRepository,
+            ICardapioRepository cardapioRepository,
+            IEstoqueRepository estoqueRepository,
+            IPedidoRepository pedidoRepository)
+        {
+            _unidadeRepository = unidadeRepository;
+            _cardapioRepository = cardapioRepository;
+            _estoqueRepository = estoqueRepository;
+            _pedidoRepository = pedidoRepository;
+        }
+
+        public async Task<PedidoResponse> CreateAsync(CreatePedidoRequest request, int? usuarioLogadoId = null)
+        {
+            try
+            {
+                if (request.Itens == null || request.Itens.Count == 0)
+                {
+                    return new PedidoResponse
+                    {
+                        Success = false,
+                        Error = "O pedido deve conter ao menos um item"
+                    };
+                }
+
+                var unidade = await _unidadeRepository.GetByIdAsync(request.UnidadeId);
+                if (unidade == null)
+                {
+                    return new PedidoResponse
+                    {
+                        Success = false,
+                        Error = "Unidade nao encontrada"
+                    };
+                }
+
+                if (!unidade.Ativo)
+                {
+                    return new PedidoResponse
+                    {
+                        Success = false,
+                        Error = "A unidade informada esta inativa"
+                    };
+                }
+
+                var canalHabilitado = unidade.CanaisAtendimento
+                    .Any(c => c.Ativo && c.Canal == request.CanalPedido);
+
+                if (!canalHabilitado)
+                {
+                    return new PedidoResponse
+                    {
+                        Success = false,
+                        Error = "O canal informado nao esta habilitado para esta unidade"
+                    };
+                }
+
+                var itensAgrupados = request.Itens
+                    .GroupBy(i => i.ProdutoId)
+                    .Select(g => new
+                    {
+                        ProdutoId = g.Key,
+                        Quantidade = g.Sum(x => x.Quantidade),
+                        ObservacaoItem = string.Join("; ", g.Select(x => x.ObservacaoItem).Where(x => !string.IsNullOrWhiteSpace(x)))
+                    })
+                    .ToList();
+
+                var numeroPedido = GenerateNumeroPedido();
+
+                var pedido = new Pedido
+                {
+                    NumeroPedido = numeroPedido,
+                    UnidadeId = request.UnidadeId,
+                    CanalPedido = request.CanalPedido,
+                    ClienteId = request.ClienteId ?? usuarioLogadoId,
+                    Observacao = request.Observacao,
+                    StatusPedido = StatusPedido.AGUARDANDO_PAGAMENTO
+                };
+
+                var estoqueItensAtualizados = new List<EstoqueItem>();
+                var movimentacoesEstoque = new List<EstoqueMovimentacao>();
+                decimal valorTotal = 0;
+
+                foreach (var item in itensAgrupados)
+                {
+                    var cardapioItem = await _cardapioRepository.GetByUnidadeAndProdutoAsync(request.UnidadeId, item.ProdutoId);
+                    if (cardapioItem == null)
+                    {
+                        return new PedidoResponse
+                        {
+                            Success = false,
+                            Error = $"Produto {item.ProdutoId} nao esta no cardapio da unidade"
+                        };
+                    }
+
+                    if (!cardapioItem.Produto.Ativo)
+                    {
+                        return new PedidoResponse
+                        {
+                            Success = false,
+                            Error = $"Produto {item.ProdutoId} esta inativo"
+                        };
+                    }
+
+                    var estoque = await _estoqueRepository.GetByUnidadeAndProdutoAsync(request.UnidadeId, item.ProdutoId);
+                    if (estoque == null || !estoque.Ativo)
+                    {
+                        return new PedidoResponse
+                        {
+                            Success = false,
+                            Error = $"Produto {item.ProdutoId} sem controle de estoque ativo na unidade"
+                        };
+                    }
+
+                    if (estoque.QuantidadeDisponivel < item.Quantidade)
+                    {
+                        return new PedidoResponse
+                        {
+                            Success = false,
+                            Error = $"Estoque insuficiente para o produto {item.ProdutoId}"
+                        };
+                    }
+
+                    var valorUnitario = cardapioItem.PrecoPraticado ?? cardapioItem.Produto.PrecoBase;
+                    var subtotal = valorUnitario * item.Quantidade;
+
+                    pedido.Itens.Add(new PedidoItem
+                    {
+                        CardapioItemId = cardapioItem.Id,
+                        Quantidade = item.Quantidade,
+                        ValorUnitario = valorUnitario,
+                        Subtotal = subtotal,
+                        ObservacaoItem = string.IsNullOrWhiteSpace(item.ObservacaoItem) ? null : item.ObservacaoItem
+                    });
+
+                    valorTotal += subtotal;
+
+                    estoque.QuantidadeDisponivel -= item.Quantidade;
+                    estoque.DataAtualizacao = DateTime.UtcNow;
+                    estoqueItensAtualizados.Add(estoque);
+
+                    movimentacoesEstoque.Add(new EstoqueMovimentacao
+                    {
+                        EstoqueItemId = estoque.Id,
+                        TipoMovimentacao = TipoMovimentacaoEstoque.SAIDA,
+                        Quantidade = item.Quantidade,
+                        UsuarioResponsavelId = usuarioLogadoId,
+                        Observacao = $"Saida por criacao do pedido {numeroPedido}"
+                    });
+                }
+
+                pedido.ValorTotal = valorTotal;
+
+                var pedidoCriado = await _pedidoRepository.CreateWithStockAsync(pedido, estoqueItensAtualizados, movimentacoesEstoque);
+
+                return MapToResponse(pedidoCriado);
+            }
+            catch (Exception ex)
+            {
+                return new PedidoResponse
+                {
+                    Success = false,
+                    Error = $"Erro ao criar pedido: {ex.Message}"
+                };
+            }
+        }
+
+        private static PedidoResponse MapToResponse(Pedido pedido)
+        {
+            return new PedidoResponse
+            {
+                Success = true,
+                Id = pedido.Id,
+                NumeroPedido = pedido.NumeroPedido,
+                UnidadeId = pedido.UnidadeId,
+                CanalPedido = pedido.CanalPedido,
+                StatusPedido = pedido.StatusPedido,
+                ValorTotal = pedido.ValorTotal,
+                DataCriacao = pedido.DataCriacao,
+                Itens = pedido.Itens.Select(i => new PedidoItemResponse
+                {
+                    ProdutoId = i.CardapioItem?.ProdutoId ?? 0,
+                    NomeProduto = i.CardapioItem?.Produto?.NomeProduto ?? string.Empty,
+                    Quantidade = i.Quantidade,
+                    ValorUnitario = i.ValorUnitario,
+                    Subtotal = i.Subtotal
+                }).ToList()
+            };
+        }
+
+        private static string GenerateNumeroPedido()
+        {
+            return $"PED-{DateTime.UtcNow:yyyyMMddHHmmssfff}";
+        }
+    }
+}
