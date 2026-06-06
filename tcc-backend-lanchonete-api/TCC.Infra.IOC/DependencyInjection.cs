@@ -25,6 +25,7 @@ namespace TCC.Infra.IOC
             services.AddScoped<ICardapioRepository, CardapioRepository>();
             services.AddScoped<IEstoqueRepository, EstoqueRepository>();
             services.AddScoped<IPedidoRepository, PedidoRepository>();
+            services.AddScoped<IPagamentoRepository, PagamentoRepository>();
 
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<ILoginService, LoginService>();
@@ -33,6 +34,8 @@ namespace TCC.Infra.IOC
             services.AddScoped<IUnidadeService, UnidadeService>();
             services.AddScoped<ICardapioService, CardapioService>();
             services.AddScoped<IPedidoService, PedidoService>();
+            services.AddScoped<IPagamentoMockGateway, PagamentoMockGateway>();
+            services.AddScoped<IPagamentoService, PagamentoService>();
 
             return services;
         }

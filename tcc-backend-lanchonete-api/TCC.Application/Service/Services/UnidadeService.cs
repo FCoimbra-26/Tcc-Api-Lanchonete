@@ -20,23 +20,22 @@ namespace TCC.Application.Service.Services
         {
             try
             {
-                // RN008: Código único
+                
                 if (await _unidadeRepository.ExistsByCodigoAsync(request.Codigo))
                 {
                     return new UnidadeResponse
                     {
                         Success = false,
-                        Error = "Já existe uma unidade com este código"
+                        Error = "Jï¿½ existe uma unidade com este cï¿½digo"
                     };
                 }
 
-                // RN009: Ao menos um canal de atendimento
                 if (request.CanaisAtendimento == null || !request.CanaisAtendimento.Any())
                 {
                     return new UnidadeResponse
                     {
                         Success = false,
-                        Error = "É obrigatório informar ao menos um canal de atendimento"
+                        Error = "ï¿½ obrigatï¿½rio informar ao menos um canal de atendimento"
                     };
                 }
 
@@ -94,7 +93,7 @@ namespace TCC.Application.Service.Services
                     return new UnidadeResponse
                     {
                         Success = false,
-                        Error = "Unidade não encontrada"
+                        Error = "Unidade nï¿½o encontrada"
                     };
                 }
 
@@ -140,7 +139,7 @@ namespace TCC.Application.Service.Services
                     return new UnidadeResponse
                     {
                         Success = false,
-                        Error = "Unidade não encontrada"
+                        Error = "Unidade nï¿½o encontrada"
                     };
                 }
 
@@ -166,7 +165,7 @@ namespace TCC.Application.Service.Services
                     return new UnidadeResponse
                     {
                         Success = false,
-                        Error = "Unidade não encontrada"
+                        Error = "Unidade nï¿½o encontrada"
                     };
                 }
 
@@ -222,7 +221,7 @@ namespace TCC.Application.Service.Services
                     return new UnidadeResponse
                     {
                         Success = false,
-                        Error = "Unidade não encontrada"
+                        Error = "Unidade nï¿½o encontrada"
                     };
                 }
 
@@ -251,7 +250,7 @@ namespace TCC.Application.Service.Services
                     return new UnidadeResponse
                     {
                         Success = false,
-                        Error = "Unidade não encontrada"
+                        Error = "Unidade nï¿½o encontrada"
                     };
                 }
 
@@ -274,14 +273,13 @@ namespace TCC.Application.Service.Services
         {
             try
             {
-                // RN010: Verificação implementada no momento de criar pedido
                 var deactivated = await _unidadeRepository.DeactivateAsync(id);
                 if (!deactivated)
                 {
                     return new UnidadeResponse
                     {
                         Success = false,
-                        Error = "Unidade não encontrada"
+                        Error = "Unidade nï¿½o encontrada"
                     };
                 }
 
@@ -310,7 +308,7 @@ namespace TCC.Application.Service.Services
                     return new UnidadeResponse
                     {
                         Success = false,
-                        Error = "Unidade não encontrada"
+                        Error = "Unidade nï¿½o encontrada"
                     };
                 }
 
@@ -339,18 +337,17 @@ namespace TCC.Application.Service.Services
                     return new UnidadeResponse
                     {
                         Success = false,
-                        Error = "Unidade não encontrada"
+                        Error = "Unidade nï¿½o encontrada"
                     };
                 }
 
-                // RN009: Verificar se não é o último canal
                 var canaisAtivos = await _unidadeRepository.GetCanaisAtivosAsync(id);
                 if (canaisAtivos.Count() == 1 && canaisAtivos.Contains(canal))
                 {
                     return new UnidadeResponse
                     {
                         Success = false,
-                        Error = "Não é possível remover o último canal de atendimento da unidade"
+                        Error = "Nï¿½o ï¿½ possï¿½vel remover o ï¿½ltimo canal de atendimento da unidade"
                     };
                 }
 

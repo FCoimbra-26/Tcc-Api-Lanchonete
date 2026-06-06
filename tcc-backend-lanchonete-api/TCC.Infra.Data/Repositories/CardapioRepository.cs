@@ -23,10 +23,8 @@ namespace TCC.Infra.Data.Repositories
 
             if (apenasDisponiveis)
             {
-                // Filtra apenas produtos ativos
                 query = query.Where(c => c.Produto.Ativo);
 
-                // Verifica estoque disponível
                 var queryComEstoque = from cardapio in query
                                      join estoque in _context.EstoqueItens
                                          on new { cardapio.UnidadeId, cardapio.ProdutoId }

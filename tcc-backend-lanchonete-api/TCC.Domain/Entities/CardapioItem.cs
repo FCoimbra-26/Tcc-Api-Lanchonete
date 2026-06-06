@@ -10,7 +10,6 @@ namespace TCC.Domain.Entities
         public virtual ProdutoGlobal Produto { get; set; }
         public virtual ICollection<PedidoItem> PedidoItens { get; set; } = new List<PedidoItem>();
 
-        // Propriedade calculada: produto ativo + estoque > 0
         public bool DisponivelNaUnidade => Produto?.Ativo == true;
     }
 }
