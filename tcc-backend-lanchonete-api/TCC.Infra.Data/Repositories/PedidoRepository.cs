@@ -14,6 +14,16 @@ namespace TCC.Infra.Data.Repositories
             _context = context;
         }
 
+        public async Task<Pedido?> GetByIdAsync(int pedidoId)
+        {
+            return await _context.Pedidos
+                .Include(p => p.Itens)
+                    .ThenInclude(i => i.CardapioItem)
+                        .ThenInclude(c => c.Produto)
+                .Include(p => p.Historicos)
+                .FirstOrDefaultAsync(p => p.Id == pedidoId);
+        }
+
         public async Task<Pedido> CreateWithStockAsync(
             Pedido pedido,
             IEnumerable<EstoqueItem> estoqueItensAtualizados,
@@ -57,6 +67,84 @@ namespace TCC.Infra.Data.Repositories
                     .FirstAsync(p => p.Id == pedido.Id);
 
                 return pedidoCriado;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
+
+        public async Task<Pedido> UpdateStatusAsync(Pedido pedido, PedidoStatusHistorico historico)
+        {
+            var utcNow = DateTime.UtcNow;
+
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                pedido.DataAtualizacao = utcNow;
+                historico.DataCriacao = utcNow;
+                historico.DataAtualizacao = utcNow;
+
+                _context.Pedidos.Update(pedido);
+                await _context.PedidoStatusHistoricos.AddAsync(historico);
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return await _context.Pedidos
+                    .Include(p => p.Itens)
+                        .ThenInclude(i => i.CardapioItem)
+                            .ThenInclude(c => c.Produto)
+                    .Include(p => p.Historicos)
+                    .FirstAsync(p => p.Id == pedido.Id);
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
+
+        public async Task<Pedido> CancelWithStockReversalAsync(
+            Pedido pedido,
+            PedidoStatusHistorico historico,
+            IEnumerable<EstoqueItem> estoqueItensAtualizados,
+            IEnumerable<EstoqueMovimentacao> movimentacoesEstoque)
+        {
+            var utcNow = DateTime.UtcNow;
+
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                pedido.DataAtualizacao = utcNow;
+                historico.DataCriacao = utcNow;
+                historico.DataAtualizacao = utcNow;
+
+                _context.Pedidos.Update(pedido);
+                _context.EstoqueItens.UpdateRange(estoqueItensAtualizados);
+                await _context.PedidoStatusHistoricos.AddAsync(historico);
+
+                foreach (var movimentacao in movimentacoesEstoque)
+                {
+                    movimentacao.PedidoId = pedido.Id;
+                    movimentacao.DataCriacao = utcNow;
+                    movimentacao.DataAtualizacao = utcNow;
+                }
+
+                await _context.EstoqueMovimentacoes.AddRangeAsync(movimentacoesEstoque);
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return await _context.Pedidos
+                    .Include(p => p.Itens)
+                        .ThenInclude(i => i.CardapioItem)
+                            .ThenInclude(c => c.Produto)
+                    .Include(p => p.Historicos)
+                    .FirstAsync(p => p.Id == pedido.Id);
             }
             catch
             {
