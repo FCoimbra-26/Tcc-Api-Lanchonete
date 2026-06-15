@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TCC.Domain.Entities;
+using TCC.Domain.Enums;
 using TCC.Domain.Interfaces;
 using TCC.Infra.Data.Context;
 
@@ -22,6 +23,22 @@ namespace TCC.Infra.Data.Repositories
                         .ThenInclude(c => c.Produto)
                 .Include(p => p.Historicos)
                 .FirstOrDefaultAsync(p => p.Id == pedidoId);
+        }
+
+        public async Task<IEnumerable<Pedido>> GetAllAsync(CanalAtendimento? canalPedido = null)
+        {
+            var query = _context.Pedidos
+                .Include(p => p.Itens)
+                .AsQueryable();
+
+            if (canalPedido.HasValue)
+            {
+                query = query.Where(p => p.CanalPedido == canalPedido.Value);
+            }
+
+            return await query
+                .OrderByDescending(p => p.DataCriacao)
+                .ToListAsync();
         }
 
         public async Task<Pedido> CreateWithStockAsync(

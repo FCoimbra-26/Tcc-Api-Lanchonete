@@ -180,6 +180,38 @@ namespace TCC.Application.Service.Services
             }
         }
 
+        public async Task<PedidoListResponse> GetAllAsync(CanalAtendimento? canalPedido = null)
+        {
+            try
+            {
+                var pedidos = await _pedidoRepository.GetAllAsync(canalPedido);
+
+                return new PedidoListResponse
+                {
+                    Success = true,
+                    Pedidos = pedidos.Select(p => new PedidoListItemResponse
+                    {
+                        Id = p.Id,
+                        NumeroPedido = p.NumeroPedido,
+                        UnidadeId = p.UnidadeId,
+                        CanalPedido = p.CanalPedido,
+                        StatusPedido = p.StatusPedido,
+                        ValorTotal = p.ValorTotal,
+                        DataCriacao = p.DataCriacao,
+                        TotalItens = p.Itens.Sum(i => i.Quantidade)
+                    }).ToList()
+                };
+            }
+            catch (Exception ex)
+            {
+                return new PedidoListResponse
+                {
+                    Success = false,
+                    Error = $"Erro ao consultar pedidos: {ex.Message}"
+                };
+            }
+        }
+
         public async Task<PedidoResponse> UpdateStatusAsync(int pedidoId, UpdatePedidoStatusRequest request, int? usuarioLogadoId = null)
         {
             try

@@ -4,6 +4,7 @@ using System.Net;
 using System.Security.Claims;
 using TCC.Application.Models.Requests.Pedido;
 using TCC.Application.Service.Interfaces;
+using TCC.Domain.Enums;
 
 namespace tcc_backend_lanchonete_api.Controllers
 {
@@ -16,6 +17,18 @@ namespace tcc_backend_lanchonete_api.Controllers
         public PedidoController(IPedidoService pedidoService)
         {
             _pedidoService = pedidoService;
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "ATENDENTE,GERENTE,ADMIN")]
+        public async Task<ActionResult<dynamic>> GetAllAsync([FromQuery] CanalAtendimento? canalPedido = null)
+        {
+            var response = await _pedidoService.GetAllAsync(canalPedido);
+
+            if (response.Success)
+                return StatusCode((int)HttpStatusCode.OK, response);
+
+            return StatusCode((int)HttpStatusCode.InternalServerError, response);
         }
 
         [HttpPost]
