@@ -33,6 +33,7 @@ namespace TCC.Infra.IOC
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IUnidadeService, UnidadeService>();
             services.AddScoped<ICardapioService, CardapioService>();
+            services.AddScoped<IEstoqueService, EstoqueService>();
             services.AddScoped<IPedidoService, PedidoService>();
             services.AddScoped<IPagamentoMockGateway, PagamentoMockGateway>();
             services.AddScoped<IPagamentoService, PagamentoService>();
