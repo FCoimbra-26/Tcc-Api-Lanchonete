@@ -8,10 +8,12 @@ namespace TCC.Application.Service.Services
     public class EstoqueService : IEstoqueService
     {
         private readonly IEstoqueRepository _estoqueRepository;
+        private readonly IAuditService _auditService;
 
-        public EstoqueService(IEstoqueRepository estoqueRepository)
+        public EstoqueService(IEstoqueRepository estoqueRepository, IAuditService auditService)
         {
             _estoqueRepository = estoqueRepository;
+            _auditService = auditService;
         }
 
         public async Task<EstoqueEntradaResponse> RegistrarEntradaAsync(RegistrarEntradaEstoqueRequest request, int? usuarioLogadoId = null)
@@ -34,6 +36,15 @@ namespace TCC.Application.Service.Services
                     usuarioLogadoId,
                     request.Observacao);
 
+                await _auditService.RegistrarAsync(
+                    "ESTOQUE_ENTRADA",
+                    "ESTOQUE",
+                    true,
+                    usuarioLogadoId,
+                    request.UnidadeId,
+                    estoque.Id,
+                    $"Entrada de {request.Quantidade} unidade(s) para o produto {request.ProdutoId}");
+
                 return new EstoqueEntradaResponse
                 {
                     Success = true,
@@ -49,6 +60,7 @@ namespace TCC.Application.Service.Services
             }
             catch (Exception ex)
             {
+                await _auditService.RegistrarAsync("ESTOQUE_ENTRADA", "ESTOQUE", false, usuarioLogadoId, request.UnidadeId, null, ex.Message);
                 return new EstoqueEntradaResponse
                 {
                     Success = false,

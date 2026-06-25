@@ -11,11 +11,16 @@ namespace TCC.Application.Service.Services
     {
         private readonly IPagamentoRepository _pagamentoRepository;
         private readonly IPagamentoMockGateway _pagamentoMockGateway;
+        private readonly IAuditService _auditService;
 
-        public PagamentoService(IPagamentoRepository pagamentoRepository, IPagamentoMockGateway pagamentoMockGateway)
+        public PagamentoService(
+            IPagamentoRepository pagamentoRepository,
+            IPagamentoMockGateway pagamentoMockGateway,
+            IAuditService auditService)
         {
             _pagamentoRepository = pagamentoRepository;
             _pagamentoMockGateway = pagamentoMockGateway;
+            _auditService = auditService;
         }
 
         public async Task<ConfirmarPagamentoResponse> SolicitarMockAsync(
@@ -50,6 +55,7 @@ namespace TCC.Application.Service.Services
             }
             catch (Exception ex)
             {
+                await _auditService.RegistrarAsync("PAGAMENTO_CONFIRMAR", "PAGAMENTO", false, usuarioLogadoId, null, request.PedidoId, ex.Message);
                 return new ConfirmarPagamentoResponse
                 {
                     Success = false,
@@ -94,6 +100,7 @@ namespace TCC.Application.Service.Services
             }
             catch (Exception ex)
             {
+                await _auditService.RegistrarAsync("PAGAMENTO_CONFIRMAR", "PAGAMENTO", false, usuarioLogadoId, null, request.PedidoId, ex.Message);
                 return new ConfirmarPagamentoResponse
                 {
                     Success = false,
@@ -126,6 +133,7 @@ namespace TCC.Application.Service.Services
             }
             catch (Exception ex)
             {
+                await _auditService.RegistrarAsync("PAGAMENTO_CONFIRMAR", "PAGAMENTO", false, null, null, request.PedidoId, ex.Message);
                 return new ConfirmarPagamentoResponse
                 {
                     Success = false,
@@ -194,6 +202,15 @@ namespace TCC.Application.Service.Services
             }
 
             await _pagamentoRepository.RegistrarConfirmacaoAsync(tentativa);
+
+            await _auditService.RegistrarAsync(
+                "PAGAMENTO_CONFIRMAR",
+                "PAGAMENTO",
+                true,
+                usuarioLogadoId,
+                pedido.UnidadeId,
+                pedido.Id,
+                $"Status pedido: {pedido.StatusPedido}; status pagamento: {pagamento.StatusAtual}; origem: {origemConfirmacao}");
 
             return new ConfirmarPagamentoResponse
             {

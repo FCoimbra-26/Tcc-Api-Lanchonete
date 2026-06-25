@@ -12,15 +12,18 @@ namespace TCC.Application.Service.Services
         private readonly ITokenService _tokenService;
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly IUsuarioRoleRepository _usuarioRoleRepository;
+        private readonly IAuditService _auditService;
 
         public LoginService(
             ITokenService tokenService, 
             IUsuarioRepository usuarioRepository,
-            IUsuarioRoleRepository usuarioRoleRepository)
+            IUsuarioRoleRepository usuarioRoleRepository,
+            IAuditService auditService)
         {
             _tokenService = tokenService;
             _usuarioRepository = usuarioRepository;
             _usuarioRoleRepository = usuarioRoleRepository;
+            _auditService = auditService;
         }
 
         public async Task<LoginUserResponse> logar(LoginUserRequest userLogin)
@@ -29,6 +32,7 @@ namespace TCC.Application.Service.Services
 
             if (usuario == null)
             {
+                await _auditService.RegistrarAsync("LOGIN", "USUARIO", false, null, null, null, "Email nao encontrado");
                 return new LoginUserResponse
                 {
                     Success = false,
@@ -38,6 +42,7 @@ namespace TCC.Application.Service.Services
 
             if (!usuario.Ativo)
             {
+                await _auditService.RegistrarAsync("LOGIN", "USUARIO", false, usuario.Id, null, usuario.Id, "Usuario inativo");
                 return new LoginUserResponse
                 {
                     Success = false,
@@ -47,6 +52,7 @@ namespace TCC.Application.Service.Services
 
             if (!BCrypt.Net.BCrypt.Verify(userLogin.Senha, usuario.SenhaHash))
             {
+                await _auditService.RegistrarAsync("LOGIN", "USUARIO", false, usuario.Id, null, usuario.Id, "Senha invalida");
                 return new LoginUserResponse
                 {
                     Success = false,
@@ -58,6 +64,8 @@ namespace TCC.Application.Service.Services
             var primaryRole = roles.FirstOrDefault();
 
             var token = _tokenService.GenerateToken(usuario);
+
+            await _auditService.RegistrarAsync("LOGIN", "USUARIO", true, usuario.Id, null, usuario.Id, "Login realizado com sucesso");
 
             return new LoginUserResponse
             {

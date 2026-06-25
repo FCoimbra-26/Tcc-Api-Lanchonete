@@ -13,17 +13,20 @@ namespace TCC.Application.Service.Services
         private readonly ICardapioRepository _cardapioRepository;
         private readonly IEstoqueRepository _estoqueRepository;
         private readonly IPedidoRepository _pedidoRepository;
+        private readonly IAuditService _auditService;
 
         public PedidoService(
             IUnidadeRepository unidadeRepository,
             ICardapioRepository cardapioRepository,
             IEstoqueRepository estoqueRepository,
-            IPedidoRepository pedidoRepository)
+            IPedidoRepository pedidoRepository,
+            IAuditService auditService)
         {
             _unidadeRepository = unidadeRepository;
             _cardapioRepository = cardapioRepository;
             _estoqueRepository = estoqueRepository;
             _pedidoRepository = pedidoRepository;
+            _auditService = auditService;
         }
 
         public async Task<PedidoResponse> CreateAsync(CreatePedidoRequest request, int? usuarioLogadoId = null)
@@ -168,10 +171,20 @@ namespace TCC.Application.Service.Services
 
                 var pedidoCriado = await _pedidoRepository.CreateWithStockAsync(pedido, estoqueItensAtualizados, movimentacoesEstoque);
 
+                await _auditService.RegistrarAsync(
+                    "PEDIDO_CRIAR",
+                    "PEDIDO",
+                    true,
+                    usuarioLogadoId,
+                    pedidoCriado.UnidadeId,
+                    pedidoCriado.Id,
+                    $"Pedido {pedidoCriado.NumeroPedido} criado com status {pedidoCriado.StatusPedido}");
+
                 return MapToResponse(pedidoCriado);
             }
             catch (Exception ex)
             {
+                await _auditService.RegistrarAsync("PEDIDO_CRIAR", "PEDIDO", false, usuarioLogadoId, request.UnidadeId, null, ex.Message);
                 return new PedidoResponse
                 {
                     Success = false,
@@ -276,10 +289,20 @@ namespace TCC.Application.Service.Services
 
                 var pedidoAtualizado = await _pedidoRepository.UpdateStatusAsync(pedido, historico);
 
+                await _auditService.RegistrarAsync(
+                    "PEDIDO_ATUALIZAR_STATUS",
+                    "PEDIDO",
+                    true,
+                    usuarioLogadoId,
+                    pedidoAtualizado.UnidadeId,
+                    pedidoAtualizado.Id,
+                    $"Status alterado de {statusAnterior} para {request.NovoStatus}");
+
                 return MapToResponse(pedidoAtualizado);
             }
             catch (Exception ex)
             {
+                await _auditService.RegistrarAsync("PEDIDO_ATUALIZAR_STATUS", "PEDIDO", false, usuarioLogadoId, null, pedidoId, ex.Message);
                 return new PedidoResponse
                 {
                     Success = false,
@@ -386,10 +409,20 @@ namespace TCC.Application.Service.Services
                     estoqueItensAtualizados,
                     movimentacoesEstoque);
 
+                await _auditService.RegistrarAsync(
+                    "PEDIDO_CANCELAR",
+                    "PEDIDO",
+                    true,
+                    usuarioLogadoId,
+                    pedidoCancelado.UnidadeId,
+                    pedidoCancelado.Id,
+                    $"Pedido cancelado no status anterior {statusAnterior}");
+
                 return MapToResponse(pedidoCancelado);
             }
             catch (Exception ex)
             {
+                await _auditService.RegistrarAsync("PEDIDO_CANCELAR", "PEDIDO", false, usuarioLogadoId, null, pedidoId, ex.Message);
                 return new PedidoResponse
                 {
                     Success = false,

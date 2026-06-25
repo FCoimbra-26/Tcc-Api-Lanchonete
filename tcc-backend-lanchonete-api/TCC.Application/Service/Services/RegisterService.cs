@@ -13,15 +13,18 @@ namespace TCC.Application.Service.Services
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly IUsuarioRoleRepository _usuarioRoleRepository;
         private readonly ITokenService _tokenService;
+        private readonly IAuditService _auditService;
 
         public RegisterService(
             IUsuarioRepository usuarioRepository, 
             IUsuarioRoleRepository usuarioRoleRepository,
-            ITokenService tokenService)
+            ITokenService tokenService,
+            IAuditService auditService)
         {
             _usuarioRepository = usuarioRepository;
             _usuarioRoleRepository = usuarioRoleRepository;
             _tokenService = tokenService;
+            _auditService = auditService;
         }
 
         public async Task<RegisterUserResponse> RegisterAsync(RegisterUserRequest request)
@@ -30,20 +33,22 @@ namespace TCC.Application.Service.Services
             {
                 if (await _usuarioRepository.ExistsByEmailAsync(request.Email))
                 {
+                    await _auditService.RegistrarAsync("REGISTRO_USUARIO", "USUARIO", false, null, null, null, "Email ja cadastrado");
                     return new RegisterUserResponse
                     {
                         Success = false,
-                        Error = "Email já cadastrado"
+                        Error = "Email jï¿½ cadastrado"
                     };
                 }
 
                 if (!string.IsNullOrWhiteSpace(request.Cpf) && 
                     await _usuarioRepository.ExistsByCpfAsync(request.Cpf))
                 {
+                    await _auditService.RegistrarAsync("REGISTRO_USUARIO", "USUARIO", false, null, null, null, "CPF ja cadastrado");
                     return new RegisterUserResponse
                     {
                         Success = false,
-                        Error = "CPF já cadastrado"
+                        Error = "CPF jï¿½ cadastrado"
                     };
                 }
 
@@ -87,6 +92,8 @@ namespace TCC.Application.Service.Services
 
                 var token = _tokenService.GenerateToken(usuarioCriado);
 
+                await _auditService.RegistrarAsync("REGISTRO_USUARIO", "USUARIO", true, usuarioCriado.Id, null, usuarioCriado.Id, "Usuario cadastrado com role CLIENTE");
+
                 return new RegisterUserResponse
                 {
                     Success = true,
@@ -99,10 +106,11 @@ namespace TCC.Application.Service.Services
             }
             catch (Exception ex)
             {
+                await _auditService.RegistrarAsync("REGISTRO_USUARIO", "USUARIO", false, null, null, null, ex.Message);
                 return new RegisterUserResponse
                 {
                     Success = false,
-                    Error = $"Erro ao cadastrar usuário: {ex.Message}"
+                    Error = $"Erro ao cadastrar usuï¿½rio: {ex.Message}"
                 };
             }
         }

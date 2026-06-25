@@ -23,6 +23,7 @@ namespace TCC.Infra.Data.Context
         public DbSet<PedidoStatusHistorico> PedidoStatusHistoricos { get; set; }
         public DbSet<Pagamento> Pagamentos { get; set; }
         public DbSet<PagamentoTentativa> PagamentoTentativas { get; set; }
+        public DbSet<AuditLog> AuditLogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -43,6 +44,7 @@ namespace TCC.Infra.Data.Context
             modelBuilder.ApplyConfiguration(new PedidoStatusHistoricoConfiguration());
             modelBuilder.ApplyConfiguration(new PagamentoConfiguration());
             modelBuilder.ApplyConfiguration(new PagamentoTentativaConfiguration());
+            modelBuilder.ApplyConfiguration(new AuditLogConfiguration());
         }
     }
 }

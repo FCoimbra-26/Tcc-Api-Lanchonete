@@ -10,13 +10,16 @@ namespace TCC.Application.Service.Services
     {
         private readonly IUsuarioRoleRepository _usuarioRoleRepository;
         private readonly IUsuarioRepository _usuarioRepository;
+        private readonly IAuditService _auditService;
 
         public RoleService(
             IUsuarioRoleRepository usuarioRoleRepository,
-            IUsuarioRepository usuarioRepository)
+            IUsuarioRepository usuarioRepository,
+            IAuditService auditService)
         {
             _usuarioRoleRepository = usuarioRoleRepository;
             _usuarioRepository = usuarioRepository;
+            _auditService = auditService;
         }
 
         public async Task<RoleListResponse> GetAllRolesAsync()
@@ -55,7 +58,7 @@ namespace TCC.Application.Service.Services
                     return new UserRolesResponse
                     {
                         Success = false,
-                        Error = "Usuário não encontrado"
+                        Error = "Usuï¿½rio nï¿½o encontrado"
                     };
                 }
 
@@ -78,7 +81,7 @@ namespace TCC.Application.Service.Services
                 return new UserRolesResponse
                 {
                     Success = false,
-                    Error = $"Erro ao buscar roles do usuário: {ex.Message}"
+                    Error = $"Erro ao buscar roles do usuï¿½rio: {ex.Message}"
                 };
             }
         }
@@ -90,14 +93,17 @@ namespace TCC.Application.Service.Services
                 var usuario = await _usuarioRepository.GetByIdAsync(request.UsuarioId);
                 if (usuario == null)
                 {
+                    await _auditService.RegistrarAsync("ROLE_ATRIBUIR", "USUARIO_ROLE", false, null, null, request.UsuarioId, "Usuario nao encontrado");
                     return new RoleResponse
                     {
                         Success = false,
-                        Error = "Usuário não encontrado"
+                        Error = "Usuï¿½rio nï¿½o encontrado"
                     };
                 }
 
                 var roleAssigned = await _usuarioRoleRepository.AssignRoleAsync(request.UsuarioId, request.Role);
+
+                await _auditService.RegistrarAsync("ROLE_ATRIBUIR", "USUARIO_ROLE", true, request.UsuarioId, null, roleAssigned.Id, $"Role atribuida: {request.Role}");
 
                 return new RoleResponse
                 {
@@ -112,10 +118,11 @@ namespace TCC.Application.Service.Services
             }
             catch (Exception ex)
             {
+                await _auditService.RegistrarAsync("ROLE_ATRIBUIR", "USUARIO_ROLE", false, request.UsuarioId, null, null, ex.Message);
                 return new RoleResponse
                 {
                     Success = false,
-                    Error = $"Erro ao associar role ao usuário: {ex.Message}"
+                    Error = $"Erro ao associar role ao usuï¿½rio: {ex.Message}"
                 };
             }
         }
@@ -127,13 +134,15 @@ namespace TCC.Application.Service.Services
                 var removed = await _usuarioRoleRepository.RemoveRoleAsync(usuarioId, role);
                 if (!removed)
                 {
+                    await _auditService.RegistrarAsync("ROLE_REMOVER", "USUARIO_ROLE", false, usuarioId, null, null, $"Role nao encontrada: {role}");
                     return new RoleResponse
                     {
                         Success = false,
-                        Error = "Role não encontrada para este usuário"
+                        Error = "Role nï¿½o encontrada para este usuï¿½rio"
                     };
                 }
 
+                await _auditService.RegistrarAsync("ROLE_REMOVER", "USUARIO_ROLE", true, usuarioId, null, null, $"Role removida: {role}");
                 return new RoleResponse
                 {
                     Success = true
@@ -141,10 +150,11 @@ namespace TCC.Application.Service.Services
             }
             catch (Exception ex)
             {
+                await _auditService.RegistrarAsync("ROLE_REMOVER", "USUARIO_ROLE", false, usuarioId, null, null, ex.Message);
                 return new RoleResponse
                 {
                     Success = false,
-                    Error = $"Erro ao remover role do usuário: {ex.Message}"
+                    Error = $"Erro ao remover role do usuï¿½rio: {ex.Message}"
                 };
             }
         }
@@ -156,13 +166,15 @@ namespace TCC.Application.Service.Services
                 var activated = await _usuarioRoleRepository.ActivateRoleAsync(usuarioId, role);
                 if (!activated)
                 {
+                    await _auditService.RegistrarAsync("ROLE_ATIVAR", "USUARIO_ROLE", false, usuarioId, null, null, $"Role nao encontrada: {role}");
                     return new RoleResponse
                     {
                         Success = false,
-                        Error = "Role não encontrada para este usuário"
+                        Error = "Role nï¿½o encontrada para este usuï¿½rio"
                     };
                 }
 
+                await _auditService.RegistrarAsync("ROLE_ATIVAR", "USUARIO_ROLE", true, usuarioId, null, null, $"Role ativada: {role}");
                 return new RoleResponse
                 {
                     Success = true
@@ -170,6 +182,7 @@ namespace TCC.Application.Service.Services
             }
             catch (Exception ex)
             {
+                await _auditService.RegistrarAsync("ROLE_ATIVAR", "USUARIO_ROLE", false, usuarioId, null, null, ex.Message);
                 return new RoleResponse
                 {
                     Success = false,
@@ -185,13 +198,15 @@ namespace TCC.Application.Service.Services
                 var deactivated = await _usuarioRoleRepository.DeactivateRoleAsync(usuarioId, role);
                 if (!deactivated)
                 {
+                    await _auditService.RegistrarAsync("ROLE_DESATIVAR", "USUARIO_ROLE", false, usuarioId, null, null, $"Role nao encontrada: {role}");
                     return new RoleResponse
                     {
                         Success = false,
-                        Error = "Role não encontrada para este usuário"
+                        Error = "Role nï¿½o encontrada para este usuï¿½rio"
                     };
                 }
 
+                await _auditService.RegistrarAsync("ROLE_DESATIVAR", "USUARIO_ROLE", true, usuarioId, null, null, $"Role desativada: {role}");
                 return new RoleResponse
                 {
                     Success = true
@@ -199,6 +214,7 @@ namespace TCC.Application.Service.Services
             }
             catch (Exception ex)
             {
+                await _auditService.RegistrarAsync("ROLE_DESATIVAR", "USUARIO_ROLE", false, usuarioId, null, null, ex.Message);
                 return new RoleResponse
                 {
                     Success = false,
@@ -212,8 +228,8 @@ namespace TCC.Application.Service.Services
             return role switch
             {
                 UsuarioRole.CLIENTE => "Cliente do estabelecimento",
-                UsuarioRole.ATENDENTE => "Atendente responsável pelo atendimento",
-                UsuarioRole.COZINHA => "Equipe da cozinha responsável pelo preparo",
+                UsuarioRole.ATENDENTE => "Atendente responsï¿½vel pelo atendimento",
+                UsuarioRole.COZINHA => "Equipe da cozinha responsï¿½vel pelo preparo",
                 UsuarioRole.GERENTE => "Gerente da unidade",
                 UsuarioRole.ADMIN => "Administrador do sistema",
                 _ => "Role desconhecida"
