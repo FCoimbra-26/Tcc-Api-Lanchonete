@@ -65,11 +65,13 @@ Usuarios pre-cadastrados para testes:
 
 - `joao.silva@email.com` (CLIENTE)
 - `atendente@test.com` (ATENDENTE)
+- `cozinha@test.com` (COZINHA)
 - `gerente@test.com` (GERENTE)
+- `adm@test.com` (ADM)
 
 Senha padrao dos usuarios: `senha123`.
 
-5. Abrir Swagger em https://localhost:7000/swagger.
+5. Abrir Swagger em https://localhost:5225/swagger.
 
 ## Colecao Postman (testes minimos)
 
@@ -87,22 +89,25 @@ Arquivo da colecao:
 
 Preencha antes de executar:
 
-- baseUrl (padrao: https://localhost:7000)
+- baseUrl (padrao: https://localhost:5225)
 - login_cliente_email
 - login_cliente_senha
+- login_cozinha_email
+- login_cozinha_senha
 - login_atendente_email
 - login_atendente_senha
 - login_gerente_email
 - login_gerente_senha
-
+- login_adm _email
+- login_adm_senha
 Variaveis preenchidas automaticamente pela propria colecao durante a execucao:
 
 - token
 - token_cliente
-- token_cliente_ou_admin
-- token_atendente_ou_gerente_ou_admin
-- token_cozinha_ou_gerente_ou_atendente
-- token_gerente_ou_admin
+- token_atendente
+- token_cozinha
+- token_gerente
+- token_admin
 - unidadeId
 - unidadeCodigo
 - pedidoId
@@ -113,13 +118,15 @@ A colecao executa os logins automaticamente no inicio:
 
 - 00 - Autenticacao cliente
 - 00.1 - Autenticacao atendente
-- 00.2 - Autenticacao gerente
+- 00.2 - Autenticacao cozinha
+- 00.3 - Autenticacao gerente
+- 00.4 - Autenticacao adm
 
 Esses requests chamam POST /api/Login e salvam os tokens nas variaveis da colecao.
 
 ## Ordem de execucao dos testes
 
-Execute na ordem ja definida na colecao (00, 00.1, 00.2 e depois 01 a 10).
+Execute na ordem ja definida na colecao (00, 00.1, 00.2,00.3, 00.4 e depois 01 a 12).
 
 Os cenarios 03, 05, 08 e 10 sao negativos e devem retornar erro (4xx).
 Os demais sao cenarios positivos.
