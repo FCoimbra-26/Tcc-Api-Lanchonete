@@ -20,6 +20,8 @@ namespace TCC.Infra.Data.Repositories
             return await _context.Usuarios
                 .Include(u => u.Pessoa)
                     .ThenInclude(p => p.Endereco)
+                .Include(r => r.Roles)
+                    .Where(r => r.Ativo)
                 .FirstOrDefaultAsync(u => u.EmailNormalizado == email.ToUpper());
         }
 

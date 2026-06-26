@@ -680,7 +680,9 @@ namespace TCC.Infra.Data.Migrations
                 {
                     { 1, "Joao", "Silva", "12345678901", "11999990001", 2, new DateTime(1995, 5, 10, 0, 0, 0, DateTimeKind.Utc), dataBase, dataBase },
                     { 2, "Ana", "Atendente", "12345678902", "11999990002", 2, new DateTime(1992, 3, 15, 0, 0, 0, DateTimeKind.Utc), dataBase, dataBase },
-                    { 3, "Carlos", "Gerente", "12345678903", "11999990003", 2, new DateTime(1990, 8, 20, 0, 0, 0, DateTimeKind.Utc), dataBase, dataBase }
+                    { 3, "Pamela", "Cozinha", "12345678902", "11999990002", 2, new DateTime(1992, 3, 15, 0, 0, 0, DateTimeKind.Utc), dataBase, dataBase },
+                    { 4, "Carlos", "Gerente", "12345678903", "11999990003", 2, new DateTime(1990, 8, 20, 0, 0, 0, DateTimeKind.Utc), dataBase, dataBase },
+                    { 5, "Vitor", "ADM", "12345678234", "11999990003", 2, new DateTime(1990, 8, 20, 0, 0, 0, DateTimeKind.Utc), dataBase, dataBase }
                 });
 
             migrationBuilder.InsertData(
@@ -690,7 +692,9 @@ namespace TCC.Infra.Data.Migrations
                 {
                     { 1, "joao.silva@email.com", "joao.silva@email.com", senhaPadraoHash, true, 1, dataBase, dataBase },
                     { 2, "atendente@test.com", "atendente@test.com", senhaPadraoHash, true, 2, dataBase, dataBase },
-                    { 3, "gerente@test.com", "gerente@test.com", senhaPadraoHash, true, 3, dataBase, dataBase }
+                    { 3, "cozinha@test.com", "cozinha@test.com", senhaPadraoHash, true, 3, dataBase, dataBase },
+                    { 4, "gerente@test.com", "gerente@test.com", senhaPadraoHash, true, 4, dataBase, dataBase },
+                    { 5, "adm@test.com", "adm@test.com", senhaPadraoHash, true, 5, dataBase, dataBase }
                 });
 
             migrationBuilder.InsertData(
@@ -700,7 +704,9 @@ namespace TCC.Infra.Data.Migrations
                 {
                     { 1, 1, 0, true, dataBase, dataBase },
                     { 2, 2, 1, true, dataBase, dataBase },
-                    { 3, 3, 3, true, dataBase, dataBase }
+                    { 3, 3, 2, true, dataBase, dataBase },
+                    { 4, 4, 3, true, dataBase, dataBase },
+                    { 5, 5, 4, true, dataBase, dataBase },
                 });
         }
 

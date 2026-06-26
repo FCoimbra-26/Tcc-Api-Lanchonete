@@ -1,9 +1,769 @@
 {
   "info": {
-    "_postman_id": "3f2f8f40-5d5e-4b06-9c32-9d4abcb77d34",
+    "_postman_id": "86d585a0-f71b-446f-9035-3ec5d8c3ef04",
     "name": "TCC Lanchonete - Testes Minimos",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "56064258",
+    "_collection_link": "https://go.postman.co/collection/56064258-86d585a0-f71b-446f-9035-3ec5d8c3ef04?source=collection_link"
   },
+  "item": [
+    {
+      "name": "00 - Autenticacao cliente",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Login cliente ok', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "let data = {};",
+              "try { data = pm.response.json(); } catch (e) {}",
+              "const token = data.token || data.Token || null;",
+              "if (token) {",
+              "    pm.collectionVariables.set('token_cliente', String(token));",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{login_cliente_email}}\",\n  \"senha\": \"{{login_cliente_senha}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/Login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "Login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "00.1 - Autenticacao atendente",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Login atendente ok', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "let data = {};",
+              "try { data = pm.response.json(); } catch (e) {}",
+              "const token = data.token || data.Token || null;",
+              "if (token) {",
+              "    pm.collectionVariables.set('token_atendente', String(token));",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{login_atendente_email}}\",\n  \"senha\": \"{{login_atendente_senha}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/Login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "Login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "00.2 - Autenticacao cozinha",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Login cozinha ok', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "let data = {};",
+              "try { data = pm.response.json(); } catch (e) {}",
+              "const token = data.token || data.Token || null;",
+              "if (token) {",
+              "    pm.collectionVariables.set('token_cozinha', String(token));",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{login_cozinha_email}}\",\n  \"senha\": \"{{login_cozinha_senha}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/Login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "Login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "00.3 - Autenticacao gerente",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Login gerente ok', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "let data = {};",
+              "try { data = pm.response.json(); } catch (e) {}",
+              "const token = data.token || data.Token || null;",
+              "if (token) {",
+              "    pm.collectionVariables.set('token_gerente', String(token));",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{login_gerente_email}}\",\n  \"senha\": \"{{login_gerente_senha}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/Login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "Login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "00.4 - Autenticacao adm",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Login adm ok', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "let data = {};",
+              "try { data = pm.response.json(); } catch (e) {}",
+              "const token = data.token || data.Token || null;",
+              "if (token) {",
+              "    pm.collectionVariables.set('token_adm', String(token));",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{login_adm_email}}\",\n  \"senha\": \"{{login_adm_senha}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/Login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "Login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "01 - Listar roles",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/Role",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "Role"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "02 - Criar unidade",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 2xx', function () {\r",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token_adm}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"codigo\": \"UN{{$timestamp}}\",\n  \"nome\": \"Unidade Centro\",\n  \"canaisAtendimento\": [0, 1, 2],\n  \"endereco\": {\n    \"logradouro\": \"Rua das Flores\",\n    \"numero\": \"100\",\n    \"complemento\": \"Loja 1\",\n    \"bairro\": \"Centro\",\n    \"cidade\": \"Sao Paulo\",\n    \"uf\": \"SP\",\n    \"cep\": \"01234567\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/Unidade",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "Unidade"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "03 - Criar unidade com codigo duplicado",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status de erro esperado', function () {",
+              "    pm.expect(pm.response.code).to.be.greaterThan(399);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token_adm}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"codigo\": \"{{unidadeCodigo}}\",\n  \"nome\": \"Outra Unidade\",\n  \"canaisAtendimento\": [0]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/Unidade",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "Unidade"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "04 - Criar pedido",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 2xx', function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+              "});",
+              "let data = {};",
+              "try { data = pm.response.json(); } catch (e) {}",
+              "const pedidoId = data.id || data.pedidoId || null;",
+              "if (pedidoId) pm.collectionVariables.set('pedidoId', String(pedidoId));"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token_cliente}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"unidadeId\": {{unidadeId}},\n  \"canalPedido\": 0,\n  \"observacao\": \"Sem cebola\",\n  \"itens\": [\n    {\n      \"produtoId\": 1,\n      \"quantidade\": 2\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/Pedido",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "Pedido"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "05 - Criar pedido com erro de estoque",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status de erro esperado', function () {",
+              "    pm.expect(pm.response.code).to.be.greaterThan(399);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token_cliente}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"unidadeId\": {{unidadeId}},\n  \"canalPedido\": 0,\n  \"itens\": [\n    {\n      \"produtoId\": 1,\n      \"quantidade\": 9999\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/Pedido",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "Pedido"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "06 - Confirmar pagamento aprovado",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 2xx', function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token_cliente}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"pedidoId\": {{pedidoId}},\n  \"metodoPagamento\": \"PIX\",\n  \"aprovado\": true,\n  \"simularFalhaComunicacao\": false\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/Pagamento/solicitar-mock",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "Pagamento",
+            "solicitar-mock"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "07 - Atualizar status para EM_PREPARO",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token_cozinha}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"novoStatus\": 3,\n  \"observacao\": \"Pedido entrou em preparo\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/Pedido/{{pedidoId}}/status",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "Pedido",
+            "{{pedidoId}}",
+            "status"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "08 - Atualizar status com transicao invalida",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token_atendente}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"novoStatus\": 5\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/Pedido/{{pedidoId}}/status",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "Pedido",
+            "{{pedidoId}}",
+            "status"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "09 - Filtrar pedidos por canal",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token_atendente}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/Pedido?canalPedido=APP",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "Pedido"
+          ],
+          "query": [
+            {
+              "key": "canalPedido",
+              "value": "APP"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "10 - Cancelar pedido em preparo",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status de erro esperado', function () {",
+              "    pm.expect(pm.response.code).to.be.greaterThan(399);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token_cliente}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"observacao\": \"Tentativa de cancelamento apos preparo (espera erro)\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/Pedido/{{pedidoId}}/cancelamento",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "Pedido",
+            "{{pedidoId}}",
+            "cancelamento"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "11 - Criar pedido para cancelamento",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 2xx', function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+              "});",
+              "let data = {};",
+              "try { data = pm.response.json(); } catch (e) {}",
+              "const pedidoId = data.id || data.pedidoId || null;",
+              "if (pedidoId) pm.collectionVariables.set('pedidoId', String(pedidoId));"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token_cliente}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"unidadeId\": {{unidadeId}},\n  \"canalPedido\": 0,\n  \"observacao\": \"Sem cebola\",\n  \"itens\": [\n    {\n      \"produtoId\": 1,\n      \"quantidade\": 2\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/Pedido",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "Pedido"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "12 - Cancelar pedido",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 2xx', function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token_cliente}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"observacao\": \"Tentativa de cancelamento (espera sucesso)\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/Pedido/{{pedidoId}}/cancelamento",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "Pedido",
+            "{{pedidoId}}",
+            "cancelamento"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
   "variable": [
     {
       "key": "baseUrl",
@@ -26,6 +786,14 @@
       "value": "senha123"
     },
     {
+      "key": "login_cozinha_senha",
+      "value": ""
+    },
+    {
+      "key": "login_cozinha_email",
+      "value": ""
+    },
+    {
       "key": "login_gerente_email",
       "value": "gerente@test.com"
     },
@@ -34,7 +802,11 @@
       "value": "senha123"
     },
     {
-      "key": "token",
+      "key": "login_adm_email",
+      "value": ""
+    },
+    {
+      "key": "login_adm_senha",
       "value": ""
     },
     {
@@ -42,19 +814,19 @@
       "value": ""
     },
     {
-      "key": "token_cliente_ou_admin",
+      "key": "token_atendente",
       "value": ""
     },
     {
-      "key": "token_atendente_ou_gerente_ou_admin",
+      "key": "token_cozinha",
       "value": ""
     },
     {
-      "key": "token_cozinha_ou_gerente_ou_atendente",
+      "key": "token_gerente",
       "value": ""
     },
     {
-      "key": "token_gerente_ou_admin",
+      "key": "token_adm",
       "value": ""
     },
     {
@@ -68,454 +840,6 @@
     {
       "key": "pedidoId",
       "value": ""
-    }
-  ],
-  "item": [
-    {
-      "name": "00 - Autenticacao cliente",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"email\": \"{{login_cliente_email}}\",\n  \"senha\": \"{{login_cliente_senha}}\"\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/api/Login",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "Login"]
-        }
-      },
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Login cliente ok', function () {",
-              "    pm.response.to.have.status(200);",
-              "});",
-              "let data = {};",
-              "try { data = pm.response.json(); } catch (e) {}",
-              "const token = data.token || data.Token || null;",
-              "if (token) {",
-              "    pm.collectionVariables.set('token', String(token));",
-              "    pm.collectionVariables.set('token_cliente', String(token));",
-              "    pm.collectionVariables.set('token_cliente_ou_admin', String(token));",
-              "}"
-            ]
-          }
-        }
-      ]
-    },
-    {
-      "name": "00.1 - Autenticacao atendente",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"email\": \"{{login_atendente_email}}\",\n  \"senha\": \"{{login_atendente_senha}}\"\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/api/Login",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "Login"]
-        }
-      },
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Login atendente ok', function () {",
-              "    pm.response.to.have.status(200);",
-              "});",
-              "let data = {};",
-              "try { data = pm.response.json(); } catch (e) {}",
-              "const token = data.token || data.Token || null;",
-              "if (token) {",
-              "    pm.collectionVariables.set('token_atendente_ou_gerente_ou_admin', String(token));",
-              "    pm.collectionVariables.set('token_cozinha_ou_gerente_ou_atendente', String(token));",
-              "}"
-            ]
-          }
-        }
-      ]
-    },
-    {
-      "name": "00.2 - Autenticacao gerente",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"email\": \"{{login_gerente_email}}\",\n  \"senha\": \"{{login_gerente_senha}}\"\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/api/Login",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "Login"]
-        }
-      },
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Login gerente ok', function () {",
-              "    pm.response.to.have.status(200);",
-              "});",
-              "let data = {};",
-              "try { data = pm.response.json(); } catch (e) {}",
-              "const token = data.token || data.Token || null;",
-              "if (token) {",
-              "    pm.collectionVariables.set('token_gerente_ou_admin', String(token));",
-              "}"
-            ]
-          }
-        }
-      ]
-    },
-    {
-      "name": "01 - Listar roles",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "{{baseUrl}}/api/Role",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "Role"]
-        }
-      }
-    },
-    {
-      "name": "02 - Criar unidade",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{token_gerente_ou_admin}}"
-          },
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"codigo\": \"UN{{$timestamp}}\",\n  \"nome\": \"Unidade Centro\",\n  \"canaisAtendimento\": [0, 1, 2],\n  \"endereco\": {\n    \"logradouro\": \"Rua das Flores\",\n    \"numero\": \"100\",\n    \"complemento\": \"Loja 1\",\n    \"bairro\": \"Centro\",\n    \"cidade\": \"Sao Paulo\",\n    \"uf\": \"SP\",\n    \"cep\": \"01234567\"\n  }\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/api/Unidade",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "Unidade"]
-        }
-      },
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Status 2xx', function () {",
-              "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
-              "});",
-              "let data = {};",
-              "try { data = pm.response.json(); } catch (e) {}",
-              "const unidadeId = data.id || data.unidadeId || null;",
-              "const unidadeCodigo = data.codigo || null;",
-              "if (unidadeId) pm.collectionVariables.set('unidadeId', String(unidadeId));",
-              "if (unidadeCodigo) pm.collectionVariables.set('unidadeCodigo', String(unidadeCodigo));"
-            ]
-          }
-        }
-      ]
-    },
-    {
-      "name": "03 - Criar unidade com codigo duplicado",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{token_gerente_ou_admin}}"
-          },
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"codigo\": \"{{unidadeCodigo}}\",\n  \"nome\": \"Outra Unidade\",\n  \"canaisAtendimento\": [0]\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/api/Unidade",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "Unidade"]
-        }
-      },
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Status de erro esperado', function () {",
-              "    pm.expect(pm.response.code).to.be.greaterThan(399);",
-              "});"
-            ]
-          }
-        }
-      ]
-    },
-    {
-      "name": "04 - Criar pedido",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{token}}"
-          },
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"unidadeId\": {{unidadeId}},\n  \"canalPedido\": 0,\n  \"observacao\": \"Sem cebola\",\n  \"itens\": [\n    {\n      \"produtoId\": 1,\n      \"quantidade\": 2\n    }\n  ]\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/api/Pedido",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "Pedido"]
-        }
-      },
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Status 2xx', function () {",
-              "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
-              "});",
-              "let data = {};",
-              "try { data = pm.response.json(); } catch (e) {}",
-              "const pedidoId = data.id || data.pedidoId || null;",
-              "if (pedidoId) pm.collectionVariables.set('pedidoId', String(pedidoId));"
-            ]
-          }
-        }
-      ]
-    },
-    {
-      "name": "05 - Criar pedido com erro de estoque",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{token}}"
-          },
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"unidadeId\": {{unidadeId}},\n  \"canalPedido\": 0,\n  \"itens\": [\n    {\n      \"produtoId\": 1,\n      \"quantidade\": 9999\n    }\n  ]\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/api/Pedido",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "Pedido"]
-        }
-      },
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Status de erro esperado', function () {",
-              "    pm.expect(pm.response.code).to.be.greaterThan(399);",
-              "});"
-            ]
-          }
-        }
-      ]
-    },
-    {
-      "name": "06 - Confirmar pagamento aprovado",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{token_cliente_ou_admin}}"
-          },
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"pedidoId\": {{pedidoId}},\n  \"metodoPagamento\": \"PIX\",\n  \"aprovado\": true,\n  \"simularFalhaComunicacao\": false\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/api/Pagamento/solicitar-mock",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "Pagamento", "solicitar-mock"]
-        }
-      },
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Status 2xx', function () {",
-              "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
-              "});"
-            ]
-          }
-        }
-      ]
-    },
-    {
-      "name": "07 - Atualizar status para EM_PREPARO",
-      "request": {
-        "method": "PATCH",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{token_cozinha_ou_gerente_ou_atendente}}"
-          },
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"novoStatus\": 3,\n  \"observacao\": \"Pedido entrou em preparo\"\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/api/Pedido/{{pedidoId}}/status",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "Pedido", "{{pedidoId}}", "status"]
-        }
-      }
-    },
-    {
-      "name": "08 - Atualizar status com transicao invalida",
-      "request": {
-        "method": "PATCH",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{token_cozinha_ou_gerente_ou_atendente}}"
-          },
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"novoStatus\": 5\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/api/Pedido/{{pedidoId}}/status",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "Pedido", "{{pedidoId}}", "status"]
-        }
-      }
-    },
-    {
-      "name": "09 - Filtrar pedidos por canal",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{token_atendente_ou_gerente_ou_admin}}"
-          }
-        ],
-        "url": {
-          "raw": "{{baseUrl}}/api/Pedido?canalPedido=APP",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "Pedido"],
-          "query": [
-            {
-              "key": "canalPedido",
-              "value": "APP"
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "10 - Cancelar pedido",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{token_cliente}}"
-          },
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"observacao\": \"Tentativa de cancelamento apos preparo (espera erro)\"\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/api/Pedido/{{pedidoId}}/cancelamento",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "Pedido", "{{pedidoId}}", "cancelamento"]
-        }
-      },
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Status de erro esperado', function () {",
-              "    pm.expect(pm.response.code).to.be.greaterThan(399);",
-              "});"
-            ]
-          }
-        }
-      ]
     }
   ]
 }
